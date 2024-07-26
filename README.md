@@ -1,0 +1,92 @@
+# DNS Switcher Script
+
+This script allows you to easily switch between different DNS providers on your system. The script is interactive and allows you to choose from a list of DNS options using a simple menu interface.
+
+## Features
+
+- Switch DNS settings to popular providers including Shecan, Electro, Begzar, Google, 403, CloudFlare, and Radar.
+- Restore the default DNS setting.
+- Easy-to-use menu interface for selecting the desired DNS.
+- Real-time update of `/etc/resolv.conf` to apply the chosen DNS settings.
+
+## Usage
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/Mr-Meshky/dns-switcher.git
+   cd dns-switcher
+   ```
+
+2. **Make the Script Executable:**
+
+   ```bash
+   chmod +x dns_switcher.sh
+   ```
+
+3. **Run the Script:**
+
+   ```bash
+   sudo ./dns_switcher.sh
+   ```
+
+   **Note:** Running the script with `sudo` is necessary to modify `/etc/resolv.conf`.
+
+## Menu Options
+
+The script provides the following DNS options:
+
+- **Shecan**
+- **Electro**
+- **Begzar**
+- **Google**
+- **403**
+- **CloudFlare**
+- **Radar**
+- **Default**
+
+Navigate through the menu using the arrow keys and press `Enter` to select the desired DNS.
+
+## Example
+
+Upon running the script, you will see a menu like this:
+
+```bash
+Which DNS do you want to use?
+   Shecan
+   Electro
+   Begzar
+   Google
+-> 403
+   CloudFlare
+   Radar
+   Default
+```
+
+Use the arrow keys to navigate through the options. The selected option will be highlighted in blue. Press `Enter` to set the DNS.
+
+## Code Overview
+
+### Variables
+
+- **DNS Addresses:** Defined at the beginning of the script.
+- **Options Array:** Contains the names of the DNS providers.
+- **DNS Lists:** Two lists (`dns1_list` and `dns2_list`) hold the primary and secondary DNS addresses.
+
+### Functions
+
+- **print_menu:** Displays the interactive menu and highlights the selected option.
+- **Main Loop:** Handles user input for navigating the menu and selecting an option.
+- **Set DNS:** Updates `/etc/resolv.conf` with the chosen DNS settings.
+
+## Contributing
+
+Feel free to submit issues and pull requests for new features or improvements. Your contributions are welcome!
+
+## Author
+
+Developed by MrMeshky.ir with love.
+
+---
+
+Feel free to customize this README to better fit your needs. If you have any questions or need further assistance, please don't hesitate to ask!
