@@ -26,9 +26,23 @@ options=("Shecan" "Electro" "Begzar" "Google" "403" "CloudFlare" "Radar" "Defaul
 dns1_list=($SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 $DEFALT_DNS1)
 dns2_list=($SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 $DEFALT_DNS1)
 
+get_current_dns_name() {
+    current_dns1=$(grep -m 1 "nameserver" /etc/resolv.conf | awk '{print $2}')
+    current_dns2=$(grep -m 2 "nameserver" /etc/resolv.conf | tail -n1 | awk '{print $2}')
+    for i in ${!dns1_list[@]}; do
+        if [ "$current_dns1" == "${dns1_list[$i]}" ] && [ "$current_dns2" == "${dns2_list[$i]}" ]; then
+            echo "${options[$i]}"
+            return
+        fi
+    done
+    echo "Unknown"
+}
+
 print_menu() {
     clear
-    echo "Which DNS do you want to use?"
+    current_dns_name=$(get_current_dns_name)
+    echo -e "Current DNS Configuration: ${RED}$current_dns_name${NC}"
+    echo -e "\nWhich DNS do you want to use?"
     for i in ${!options[@]}; do
         if [ $i -eq $selected ]; then
             tput setaf 4; tput bold
