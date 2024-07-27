@@ -102,5 +102,5 @@ if [ -n "$DNS1" ]; then
     echo "nameserver $DNS1" | sudo tee /etc/resolv.conf > /dev/null
     echo "nameserver $DNS2" | sudo tee -a /etc/resolv.conf > /dev/null
     cat /etc/resolv.conf
-    echo -e "${GREEN}Setting DNS to ${options[$selected]} is done successfully${NC}\n"
+    echo -e "${GREEN}Setting DNS to ${options[$selected]} is done successfully${NC}"
 fi
