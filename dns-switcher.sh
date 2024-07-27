@@ -22,9 +22,9 @@ CLOUD_FLARE_DNS2="1.0.0.1"
 RADAR_DNS1="10.202.10.10"
 RADAR_DNS2="10.202.10.11"
 
-options=("Default" "Shecan" "Electro" "Begzar" "Google" "403" "CloudFlare" "Radar" "About")
-dns1_list=($DEFALT_DNS1 $SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 "")
-dns2_list=($DEFALT_DNS1 $SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 "")
+options=("Shecan" "Electro" "Begzar" "Google" "403" "CloudFlare" "Radar" "Default" "About")
+dns1_list=($SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 $DEFALT_DNS1 "")
+dns2_list=($SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 $DEFALT_DNS1 "")
 
 get_current_dns_name() {
     current_dns1=$(grep -m 1 "nameserver" /etc/resolv.conf | awk '{print $2}')
