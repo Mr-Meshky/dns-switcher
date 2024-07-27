@@ -8,8 +8,9 @@ This script allows you to easily switch between different DNS providers on your 
 - Restore the default DNS setting.
 - Easy-to-use menu interface for selecting the desired DNS.
 - Real-time update of `/etc/resolv.conf` to apply the chosen DNS settings.
+- Displays the current DNS configuration by name.
 
-## Usage
+## Usag
 
 1. **Clone the Repository:**
 
@@ -45,13 +46,15 @@ The script provides the following DNS options:
 - **Radar**
 - **Default**
 
-Navigate through the menu using the arrow keys and press `Enter` to select the desired DNS.
+Navigate through the menu using the arrow keys and press Enter to select the desired DNS.
 
 ## Example
 
 Upon running the script, you will see a menu like this:
 
 ```bash
+Current DNS Configuration: Google
+
 Which DNS do you want to use?
    Shecan
    Electro
@@ -85,8 +88,4 @@ Feel free to submit issues and pull requests for new features or improvements. Y
 
 ## Author
 
-Developed by MrMeshky.ir with love.
-
----
-
-Feel free to customize this README to better fit your needs. If you have any questions or need further assistance, please don't hesitate to ask!
+Developed by [MrMeshky](https://mrmeshky.ir) with love.
