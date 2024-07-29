@@ -44,9 +44,7 @@ The script provides the following DNS options:
 - **403**
 - **CloudFlare**
 - **Radar**
-- **Add Custom DNS**
 - **Default**
-- **About**
 
 Navigate through the menu using the arrow keys and press Enter to select the desired DNS.
 
@@ -65,9 +63,7 @@ Which DNS do you want to use?
 -> 403
    CloudFlare
    Radar
-   Add Custom DNS
    Default
-   About
 ```
 
 Use the arrow keys to navigate through the options. The selected option will be highlighted in blue. Press `Enter` to set the DNS.
@@ -82,12 +78,27 @@ Use the arrow keys to navigate through the options. The selected option will be 
 
 ### Functions
 
-- **get_current_dns_name:** Identifies the current DNS configuration and returns its name.
 - **print_menu:** Displays the interactive menu and highlights the selected option.
-- **show_about:** Shows information about the script.
-- **add_custom_dns:** Allows the user to add and set custom DNS addresses.
 - **Main Loop:** Handles user input for navigating the menu and selecting an option.
 - **Set DNS:** Updates `/etc/resolv.conf` with the chosen DNS settings.
+
+## Updating the Repository
+
+To update the repository, use the provided `update.sh` script. The script checks if the current directory is a Git repository, and if so, it pulls the latest changes. If not, it checks for the existence of the `dns-switcher` directory, navigates into it if it exists, and pulls the latest changes. If the directory does not exist, it clones the repository.
+
+### Running the Update Script
+
+1. **Make the Script Executable:**
+
+   ```bash
+   chmod +x update.sh
+   ```
+
+2. **Run the Script:**
+
+   ```bash
+   ./update.sh
+   ```
 
 ## Contributing
 
