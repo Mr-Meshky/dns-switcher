@@ -10,7 +10,7 @@ This script allows you to easily switch between different DNS providers on your 
 - Real-time update of `/etc/resolv.conf` to apply the chosen DNS settings.
 - Displays the current DNS configuration by name.
 
-## Usag
+## Usage
 
 1. **Clone the Repository:**
 
@@ -44,7 +44,9 @@ The script provides the following DNS options:
 - **403**
 - **CloudFlare**
 - **Radar**
+- **Add Custom DNS**
 - **Default**
+- **About**
 
 Navigate through the menu using the arrow keys and press Enter to select the desired DNS.
 
@@ -63,7 +65,9 @@ Which DNS do you want to use?
 -> 403
    CloudFlare
    Radar
+   Add Custom DNS
    Default
+   About
 ```
 
 Use the arrow keys to navigate through the options. The selected option will be highlighted in blue. Press `Enter` to set the DNS.
@@ -78,7 +82,10 @@ Use the arrow keys to navigate through the options. The selected option will be 
 
 ### Functions
 
+- **get_current_dns_name:** Identifies the current DNS configuration and returns its name.
 - **print_menu:** Displays the interactive menu and highlights the selected option.
+- **show_about:** Shows information about the script.
+- **add_custom_dns:** Allows the user to add and set custom DNS addresses.
 - **Main Loop:** Handles user input for navigating the menu and selecting an option.
 - **Set DNS:** Updates `/etc/resolv.conf` with the chosen DNS settings.
 

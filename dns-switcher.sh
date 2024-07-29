@@ -22,9 +22,9 @@ CLOUD_FLARE_DNS2="1.0.0.1"
 RADAR_DNS1="10.202.10.10"
 RADAR_DNS2="10.202.10.11"
 
-options=("Shecan" "Electro" "Begzar" "Google" "403" "CloudFlare" "Radar" "Default" "About")
-dns1_list=($SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 $DEFALT_DNS1 "")
-dns2_list=($SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 $DEFALT_DNS1 "")
+options=("Shecan" "Electro" "Begzar" "Google" "403" "CloudFlare" "Radar" "Add Custom DNS" "Default" "About")
+dns1_list=($SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 "" $DEFALT_DNS1 "")
+dns2_list=($SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 "" $DEFALT_DNS1 "")
 
 get_current_dns_name() {
     current_dns1=$(grep -m 1 "nameserver" /etc/resolv.conf | awk '{print $2}')
@@ -65,6 +65,27 @@ show_about() {
     read -n1
 }
 
+add_custom_dns() {
+    clear
+    echo -e "${BLUE}Add Custom DNS${NC}"
+    read -p "Enter primary DNS: " custom_dns1
+    read -p "Enter secondary DNS: " custom_dns2
+    dns1_list+=("$custom_dns1")
+    dns2_list+=("$custom_dns2")
+    options+=("Custom DNS")
+    DNS1="$custom_dns1"
+    DNS2="$custom_dns2"
+    if [ -n "$DNS1" ]; then
+        echo -e "\nnameserver $DNS1" | sudo tee /etc/resolv.conf > /dev/null
+        echo "nameserver $DNS2" | sudo tee -a /etc/resolv.conf > /dev/null
+        cat /etc/resolv.conf
+        echo -e "${GREEN}Setting DNS to Custom DNS is done successfully${NC}"
+        echo -e "${BLUE}To add your DNS to the tool, you can submit a pull request to the repository or create a new one at:${NC}"
+        echo -e "${YELLOW}https://github.com/Mr-Meshky/dns-switcher/issues/new${NC}"
+        exit 0
+    fi
+}
+
 selected=0
 
 print_menu
@@ -72,22 +93,24 @@ print_menu
 while true; do
     read -rsn1 input
     case $input in
-        A) 
+        A)
             ((selected--))
             if [ $selected -lt 0 ]; then
                 selected=$((${#options[@]} - 1))
             fi
             ;;
-        B) 
+        B)
             ((selected++))
             if [ $selected -ge ${#options[@]} ]; then
                 selected=0
             fi
             ;;
-        "") 
+        "")
             if [ "${options[$selected]}" == "About" ]; then
                 show_about
                 print_menu
+            elif [ "${options[$selected]}" == "Add Custom DNS" ]; then
+                add_custom_dns
             else
                 DNS1=${dns1_list[$selected]}
                 DNS2=${dns2_list[$selected]}
@@ -99,7 +122,7 @@ while true; do
 done
 
 if [ -n "$DNS1" ]; then
-    echo "nameserver $DNS1" | sudo tee /etc/resolv.conf > /dev/null
+    echo -e "\nnameserver $DNS1" | sudo tee /etc/resolv.conf > /dev/null
     echo "nameserver $DNS2" | sudo tee -a /etc/resolv.conf > /dev/null
     cat /etc/resolv.conf
     echo -e "${GREEN}Setting DNS to ${options[$selected]} is done successfully${NC}"
