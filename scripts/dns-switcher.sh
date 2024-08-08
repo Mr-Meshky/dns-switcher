@@ -12,7 +12,7 @@ ELECTRO_DNS1="78.157.42.100"
 ELECTRO_DNS2="78.157.42.101"
 BEGZAR_DNS1="185.55.226.26"
 BEGZAR_DNS2="185.55.225.25"
-DEFAULT_DNS1="127.0.0.53"
+DEFALT_DNS1="127.0.0.53"
 GOOGLE_DNS1="8.8.8.8"
 GOOGLE_DNS2="8.8.4.4"
 ONLINE_403_DNS1="10.202.10.202"
@@ -23,10 +23,8 @@ RADAR_DNS1="10.202.10.10"
 RADAR_DNS2="10.202.10.11"
 
 options=("Shecan" "Electro" "Begzar" "Google" "403" "CloudFlare" "Radar" "Add Custom DNS" "Default" "About")
-dns1_list=($SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 "" $DEFAULT_DNS1 "")
-dns2_list=($SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 "" $DEFAULT_DNS1 "")
-
-AIRPLANE_MODE_ENABLED="false"
+dns1_list=($SHECAN_DNS1 $ELECTRO_DNS1 $BEGZAR_DNS1 $GOOGLE_DNS1 $ONLINE_403_DNS1 $CLOUD_FLARE_DNS1 $RADAR_DNS1 "" $DEFALT_DNS1 "")
+dns2_list=($SHECAN_DNS2 $ELECTRO_DNS2 $BEGZAR_DNS2 $GOOGLE_DNS2 $ONLINE_403_DNS2 $CLOUD_FLARE_DNS2 $RADAR_DNS2 "" $DEFALT_DNS1 "")
 
 get_current_dns_name() {
     current_dns1=$(grep -m 1 "nameserver" /etc/resolv.conf | awk '{print $2}')
@@ -88,19 +86,6 @@ add_custom_dns() {
     fi
 }
 
-toggle_airplane_mode() {
-    echo -e "\n${BLUE}Toggle Airplane Mode${NC}"
-    read -p "Do you want to enable airplane mode? (y/n): " answer
-    if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-        nmcli radio all off
-        sleep 2
-        nmcli radio all on
-        echo -e "${GREEN}Airplane mode toggled successfully.${NC}"
-    else
-        echo -e "${YELLOW}Airplane mode toggling is disabled.${NC}"
-    fi
-}
-
 selected=0
 
 print_menu
@@ -141,10 +126,4 @@ if [ -n "$DNS1" ]; then
     echo "nameserver $DNS2" | sudo tee -a /etc/resolv.conf > /dev/null
     cat /etc/resolv.conf
     echo -e "${GREEN}Setting DNS to ${options[$selected]} is done successfully${NC}"
-fi
-
-if [ "$AIRPLANE_MODE_ENABLED" == "false" ]; then
-    toggle_airplane_mode
-else
-    echo -e "${YELLOW}Airplane mode toggling is disabled.${NC}"
 fi
