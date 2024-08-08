@@ -19,16 +19,17 @@ This script allows you to easily switch between different DNS providers on your 
    cd dns-switcher
    ```
 
-2. **Make the Script Executable:**
+2. **Install the Script:**
 
    ```bash
-   chmod +x dns-switcher.sh
+   chmod +x install.sh
+   ./install.sh
    ```
 
 3. **Run the Script:**
 
    ```bash
-   sudo ./dns-switcher.sh
+   change-dns
    ```
 
    **Note:** Running the script with `sudo` is necessary to modify `/etc/resolv.conf`.
