@@ -1,9 +1,7 @@
 #!/bin/bash
 
 current_dir=$(pwd)
-
 script_name="dns-switcher.sh"
-
 alias_command="alias change-dns='sudo ${current_dir}/scripts/${script_name}'"
 
 shell_name=$(basename "$SHELL")

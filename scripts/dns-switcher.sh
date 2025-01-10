@@ -38,6 +38,18 @@ get_current_dns_name() {
     echo "Unknown"
 }
 
+change_dns_linux() {
+    echo -e "\nChanging DNS on Linux..."
+    echo -e "\nnameserver $1" | sudo tee /etc/resolv.conf > /dev/null
+    echo "nameserver $2" | sudo tee -a /etc/resolv.conf > /dev/null
+    cat /etc/resolv.conf
+}
+
+change_dns_mac() {
+    echo -e "\nChanging DNS on macOS..."
+    sudo networksetup -setdnsservers "Wi-Fi" $1 $2
+}
+
 print_menu() {
     clear
     current_dns_name=$(get_current_dns_name)
@@ -80,8 +92,6 @@ add_custom_dns() {
         echo "nameserver $DNS2" | sudo tee -a /etc/resolv.conf > /dev/null
         cat /etc/resolv.conf
         echo -e "${GREEN}Setting DNS to Custom DNS is done successfully${NC}"
-        echo -e "${BLUE}To add your DNS to the tool, you can submit a pull request to the repository or create a new one at:${NC}"
-        echo -e "${YELLOW}https://github.com/Mr-Meshky/dns-switcher/issues/new${NC}"
         exit 0
     fi
 }
@@ -121,9 +131,15 @@ while true; do
     print_menu
 done
 
-if [ -n "$DNS1" ]; then
-    echo -e "\nnameserver $DNS1" | sudo tee /etc/resolv.conf > /dev/null
-    echo "nameserver $DNS2" | sudo tee -a /etc/resolv.conf > /dev/null
-    cat /etc/resolv.conf
-    echo -e "${GREEN}Setting DNS to ${options[$selected]} is done successfully${NC}"
+OS_TYPE=$(uname)
+
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    change_dns_linux $DNS1 $DNS2
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    change_dns_mac $DNS1 $DNS2
+else
+    echo "Unsupported OS: $OS_TYPE"
+    exit 1
 fi
+
+echo -e "${GREEN}Setting DNS to ${options[$selected]} is done successfully${NC}"
