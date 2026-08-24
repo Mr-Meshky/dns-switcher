@@ -6,7 +6,7 @@
 # Repository: https://github.com/Mr-Meshky/dns-switcher
 # ==============================================================================
 
-VERSION="3.0.0"
+VERSION="3.0.1"
 
 # --- Colors & Styles ---
 BOLD='\033[1m'
@@ -82,6 +82,17 @@ get_active_mac_service() {
     local default_dev
     default_dev=$(route -n get default 2>/dev/null | grep 'interface:' | awk '{print $2}')
     
+    # If default device is virtual/tunnel (utun, ppp, ipsec, etc.) or empty, find active physical interface
+    if [[ -z "$default_dev" || "$default_dev" =~ ^(utun|ppp|ipsec|gif|stf) ]]; then
+        local candidate
+        for candidate in $(scutil --nwi 2>/dev/null | awk '{print $1}' | grep -E '^en[0-9]+'); do
+            if ifconfig "$candidate" 2>/dev/null | grep -q "status: active"; then
+                default_dev="$candidate"
+                break
+            fi
+        done
+    fi
+
     if [ -z "$default_dev" ]; then
         default_dev="en0"
     fi
@@ -91,21 +102,30 @@ get_active_mac_service() {
     local current_service=""
     
     while IFS= read -r line; do
-        if [[ "$line" =~ ^\(Hardware\ Port:\ (.*),\ Device:\ (.*)\)$ ]]; then
-            local port="${BASH_REMATCH[1]}"
+        if [[ "$line" =~ ^(\(\*?[0-9*]+\)[[:space:]]*)+(.*)$ ]]; then
+            current_service="${BASH_REMATCH[2]}"
+            current_service="$(echo "$current_service" | sed -e 's/[[:space:]]*$//')"
+        elif [[ "$line" =~ ^\(Hardware\ Port:[[:space:]]*(.*),[[:space:]]*Device:[[:space:]]*(.*)\)$ ]]; then
             local dev="${BASH_REMATCH[2]}"
-            if [ "$dev" == "$default_dev" ]; then
+            dev="$(echo "$dev" | sed -e 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+            if [ -n "$dev" ] && [ "$dev" == "$default_dev" ]; then
                 service_name="$current_service"
                 break
             fi
-        elif [[ "$line" =~ ^\(.*\) ]]; then
-            :
-        elif [ -n "$line" ]; then
-            current_service="$line"
         fi
     done < <(networksetup -listnetworkserviceorder 2>/dev/null)
 
-    # Fallback to Wi-Fi if not found
+    # Fallback if not found
+    if [ -z "$service_name" ]; then
+        if networksetup -listallnetworkservices 2>/dev/null | grep -qx "Wi-Fi"; then
+            service_name="Wi-Fi"
+        elif networksetup -listallnetworkservices 2>/dev/null | grep -qx "Ethernet"; then
+            service_name="Ethernet"
+        else
+            service_name=$(networksetup -listallnetworkservices 2>/dev/null | grep -v '^\*' | grep -v 'An asterisk' | head -n 1)
+        fi
+    fi
+
     if [ -z "$service_name" ]; then
         service_name="Wi-Fi"
     fi
@@ -148,12 +168,14 @@ get_current_dns_servers() {
         service=$(get_active_mac_service)
         local mac_dns
         mac_dns=$(networksetup -getdnsservers "$service" 2>/dev/null)
-        if [[ "$mac_dns" =~ "There aren't any DNS Servers" || -z "$mac_dns" ]]; then
+        if [[ "$mac_dns" =~ "There aren't any DNS Servers" || "$mac_dns" =~ "Error" || "$mac_dns" =~ "not a recognized" || -z "$mac_dns" ]]; then
             # Extract from scutil if not set in networksetup
             mac_dns=$(scutil --dns 2>/dev/null | awk '/nameserver\[[0-9]+\]/ {print $3}' | grep -v ':' | head -n2)
         fi
         for ip in $mac_dns; do
-            dns_list+=("$ip")
+            if [[ "$ip" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                dns_list+=("$ip")
+            fi
         done
     elif [ "$os" == "linux" ]; then
         if [ -f /etc/resolv.conf ]; then

@@ -12,7 +12,7 @@ ADD_SUDO_RULE_SCRIPT="$SCRIPT_DIR/scripts/add-sudo-rule.sh"
 SET_DNS_ALIAS_SCRIPT="$SCRIPT_DIR/scripts/set-dns-alias.sh"
 
 echo "==============================================="
-echo "       Installing DNS Switcher v3.0.0          "
+echo "       Installing DNS Switcher v3.0.1          "
 echo "==============================================="
 
 if [[ ! -f "$DNS_SWITCHER_SCRIPT" || ! -f "$ADD_SUDO_RULE_SCRIPT" || ! -f "$SET_DNS_ALIAS_SCRIPT" ]]; then
