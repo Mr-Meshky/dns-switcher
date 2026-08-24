@@ -1,20 +1,45 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-dns_switcher_script="./scripts/dns-switcher.sh"
-add_sudo_rule_script="./scripts/add-sudo-rule.sh"
-set_dns_alias_script="./scripts/set-dns-alias.sh"
+# ==============================================================================
+# Installer for DNS Switcher
+# ==============================================================================
 
-if [[ ! -f $dns_switcher_script || ! -f $add_sudo_rule_script || ! -f $set_dns_alias_script ]]; then
-    echo "Error: One or more required files are missing."
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DNS_SWITCHER_SCRIPT="$SCRIPT_DIR/scripts/dns-switcher.sh"
+ADD_SUDO_RULE_SCRIPT="$SCRIPT_DIR/scripts/add-sudo-rule.sh"
+SET_DNS_ALIAS_SCRIPT="$SCRIPT_DIR/scripts/set-dns-alias.sh"
+
+echo "==============================================="
+echo "       Installing DNS Switcher v3.0.0          "
+echo "==============================================="
+
+if [[ ! -f "$DNS_SWITCHER_SCRIPT" || ! -f "$ADD_SUDO_RULE_SCRIPT" || ! -f "$SET_DNS_ALIAS_SCRIPT" ]]; then
+    echo "Error: Required files are missing from $SCRIPT_DIR/scripts."
     exit 1
 fi
 
-chmod +x $set_dns_alias_script
-chmod +x $dns_switcher_script
-chmod +x $add_sudo_rule_script
+chmod +x "$DNS_SWITCHER_SCRIPT"
+chmod +x "$ADD_SUDO_RULE_SCRIPT"
+chmod +x "$SET_DNS_ALIAS_SCRIPT"
 
+# Run setup scripts
+bash "$SET_DNS_ALIAS_SCRIPT"
+bash "$ADD_SUDO_RULE_SCRIPT"
 
-$add_sudo_rule_script
-$set_dns_alias_script
-
-echo "Installation completed. Please run 'source ~/.bashrc' or 'source ~/.zshrc' depending on your shell."
+echo ""
+echo "==============================================="
+echo "   Installation Completed Successfully! 🎉    "
+echo "==============================================="
+echo ""
+echo "You can now run:"
+echo "  change-dns                # Launch interactive menu"
+echo "  change-dns set 403        # Set DNS directly"
+echo "  change-dns clear          # Reset to default"
+echo "  change-dns ping           # Measure DNS latency"
+echo "  change-dns test           # Test anti-sanction benchmark"
+echo "  change-dns --help         # Show full CLI options"
+echo ""
+echo "Tip: Run 'source ~/.zshrc' (or your shell config) to use the alias immediately."
+echo ""
